@@ -44,6 +44,7 @@ export default async (req: ServerRequest) => {
   }
 
   if (interaction.type === 2) {
+    console.debug(interaction.data);
     req.respond({
       status: 200,
       headers: new Headers({
