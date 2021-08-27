@@ -8,7 +8,7 @@ const PUBLIC_KEY = Deno.env.get("DISCORD_PUBLIC_KEY");
 export default async (req: ServerRequest) => {
   const signature = req.headers.get("X-Signature-Ed25519") ?? "";
   const timestamp = req.headers.get("X-Signature-Timestamp") ?? "";
-  const body = readAll(req.body).toString();
+  const body = (await readAll(req.body)).toString();
 
   console.debug({ signature, timestamp, body });
 
