@@ -29,8 +29,8 @@ export default async (req: ServerRequest) => {
     return;
   }
 
-  const interaction: { type: number; data: { name: string; options: [] } } =
-    JSON.parse(body);
+  const interaction = JSON.parse(body);
+  console.debug(interaction);
 
   if (interaction.type === 1) {
     req.respond({
@@ -44,7 +44,6 @@ export default async (req: ServerRequest) => {
   }
 
   if (interaction.type === 2) {
-    console.debug(interaction.data);
     req.respond({
       status: 200,
       headers: new Headers({
@@ -53,7 +52,7 @@ export default async (req: ServerRequest) => {
       body: JSON.stringify({
         type: 4,
         data: {
-          content: `Hello, World!`,
+          content: `Hello, ${interaction.data.options[0].value}!`,
         },
       }),
     });
