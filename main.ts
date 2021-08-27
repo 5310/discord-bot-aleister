@@ -10,6 +10,21 @@ import {
 // from Discord.
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 
+import command2hello from "./commands/2/hello.js";
+
+const commands: Record<
+  number,
+  Record<
+    string,
+    // deno-lint-ignore no-explicit-any
+    (interaction: any) => any
+  >
+> = {
+  [2]: {
+    hello: command2hello,
+  },
+};
+
 // For all requests to "/" endpoint, we want to invoke home() handler.
 serve({
   "/interactions": interactionsHandler,
@@ -62,10 +77,7 @@ async function interactionsHandler(request: Request) {
     //   },
     // });
     try {
-      import(`./command/${type}/${data.name}`)
-        .then((handler) => {
-          return handler(interaction);
-        });
+      return json(commands[type][data.name](interaction));
     } catch (_) {
       return json({
         type: 4,
