@@ -11,14 +11,14 @@ export default async (req: ServerRequest) => {
 
   console.debug({ signature, timestamp, body });
 
+  const headers = new Headers();
+  headers.set("Content-Type", "application/json; charset=utf8");
+  console.debug(headers);
+
   const isReqValid = req.method === "POST" && !!signature && !!timestamp;
   if (!isReqValid) {
-    const headers = new Headers();
-    headers.set("Content-Type", "application/json; charset=utf8");
     req.respond({
-      status: 401,
-      headers,
-      body: JSON.stringify({ error: "invalid request format" }),
+      status: 400,
     });
     return;
   }
@@ -29,12 +29,8 @@ export default async (req: ServerRequest) => {
     hexToUint8Array(PUBLIC_KEY),
   );
   if (!isSigValid) {
-    const headers = new Headers();
-    headers.set("Content-Type", "application/json; charset=utf8");
     req.respond({
       status: 401,
-      headers,
-      body: JSON.stringify({ error: "invalid request signature" }),
     });
     return;
   }
