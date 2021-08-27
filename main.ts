@@ -53,6 +53,7 @@ async function interactionsHandler(request: Request) {
   // Type 2 in a request is an ApplicationCommand interaction.
   // It implies that a user has issued a command.
   if (type === 2) {
+    console.debug(data);
     const { value } = data.options.find((option: { name: string }) =>
       option.name === "name"
     );
