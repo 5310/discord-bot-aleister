@@ -5,15 +5,11 @@ import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
 const PUBLIC_KEY = <string> Deno.env.get("DISCORD_PUBLIC_KEY");
 
 export default async (req: ServerRequest) => {
+  console.debug(req);
+
   const signature = req.headers.get("X-Signature-Ed25519") ?? "";
   const timestamp = req.headers.get("X-Signature-Timestamp") ?? "";
   const body = new TextDecoder().decode(await readAll(req.body));
-
-  console.debug({ signature, timestamp, body });
-
-  const headers = new Headers();
-  headers.set("Content-Type", "application/json; charset=utf8");
-  console.debug(headers);
 
   const isReqValid = req.method === "POST" && !!signature && !!timestamp;
   if (!isReqValid) {
@@ -37,15 +33,32 @@ export default async (req: ServerRequest) => {
 
   const interaction: { type: number; data: { name: string; options: [] } } =
     JSON.parse(body);
+
   // Discord performs Ping interactions to test our application.
   // Type 1 in a request implies a Ping interaction.
   if (interaction.type === 1) {
-    const headers = new Headers();
-    headers.set("Content-Type", "application/json; charset=utf8");
     req.respond({
       status: 200,
-      headers,
+      headers: new Headers({
+        "content-type": "application/json; charset=utf8",
+      }),
       body: JSON.stringify({ type: 1 }),
+    });
+    return;
+  }
+
+  if (interaction.type === 2) {
+    req.respond({
+      status: 200,
+      headers: new Headers({
+        "content-type": "application/json; charset=utf8",
+      }),
+      body: JSON.stringify({
+        type: 4,
+        data: {
+          content: `Hello, World!`,
+        },
+      }),
     });
     return;
   }
