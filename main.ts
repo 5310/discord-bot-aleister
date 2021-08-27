@@ -53,18 +53,23 @@ async function interactionsHandler(request: Request) {
   // Type 2 in a request is an ApplicationCommand interaction.
   // It implies that a user has issued a command.
   if (type === 2) {
-    console.debug(data);
-    const { value } = data.options.find((option: { name: string }) =>
-      option.name === "name"
-    );
     return json({
-      // Type 4 responds with the below message retaining the user's
-      // input at the top.
       type: 4,
       data: {
-        content: `Hello, ${value}!`,
+        content: JSON.stringify(data),
       },
     });
+    //   const { value } = data.options.find((option: { name: string }) =>
+    //     option.name === "name"
+    //   );
+    //   return json({
+    //     // Type 4 responds with the below message retaining the user's
+    //     // input at the top.
+    //     type: 4,
+    //     data: {
+    //       content: `Hello, ${value}!`,
+    //     },
+    //   });
   }
 
   // We will return a bad request error as a valid Discord request
