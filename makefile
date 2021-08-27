@@ -4,10 +4,10 @@ install:
 typecheck: typecheck-command typecheck-endpoint
 
 typecheck-command: install
-	deployctl check ./deploy.ts
+	# deployctl check ./deploy.ts
 
 typecheck-endpoint: install
-	deployctl check ./main.ts
+	# deployctl check ./main.ts
 
 dev: install
 	deployctl run --watch ./main.ts
