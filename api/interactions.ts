@@ -5,8 +5,6 @@ import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
 const PUBLIC_KEY = <string> Deno.env.get("DISCORD_PUBLIC_KEY");
 
 export default async (req: ServerRequest) => {
-  console.debug(req);
-
   const signature = req.headers.get("X-Signature-Ed25519") ?? "";
   const timestamp = req.headers.get("X-Signature-Timestamp") ?? "";
   const body = new TextDecoder().decode(await readAll(req.body));
@@ -34,8 +32,6 @@ export default async (req: ServerRequest) => {
   const interaction: { type: number; data: { name: string; options: [] } } =
     JSON.parse(body);
 
-  // Discord performs Ping interactions to test our application.
-  // Type 1 in a request implies a Ping interaction.
   if (interaction.type === 1) {
     req.respond({
       status: 200,
@@ -62,6 +58,10 @@ export default async (req: ServerRequest) => {
     });
     return;
   }
+
+  req.respond({
+    status: 400,
+  });
 };
 
 // The main logic of the Discord Slash Command is defined in this function.
