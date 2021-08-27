@@ -52,17 +52,19 @@ export default async (req: ServerRequest) => {
 
   // Chat input
   if (interaction.type === 2) {
-    req.respond(jsonResponse({
-      type: 4,
-      data: {
-        content: `Hello, ${interaction.data.options[0].value}!`,
-      },
-    }));
-    return;
+    if (interaction.data.name === "hello") {
+      req.respond(jsonResponse({
+        type: 4,
+        data: {
+          content: `Hello, ${interaction.data.options[0].value}!`,
+        },
+      }));
+      return;
+    }
   }
 
   // Catch-all
   req.respond({
-    status: 400,
+    status: 501,
   });
 };
