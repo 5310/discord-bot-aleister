@@ -9,7 +9,11 @@ export default async (req: ServerRequest) => {
   const timestamp = req.headers.get("X-Signature-Timestamp") ?? "";
   const body = (await readAll(req.body)).toString();
 
-  console.debug({ signature, timestamp, body });
+  console.debug({
+    signature: req.headers.get("X-Signature-Ed25519"),
+    timestamp: req.headers.get("X-Signature-Timestamp"),
+    body: await readAll(req.body),
+  });
 
   const isReqValid = req.method === "POST" && !!signature && !!timestamp;
   if (!isReqValid) {
