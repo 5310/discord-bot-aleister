@@ -1,6 +1,6 @@
-import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
 import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
+import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 import hexToUint8Array from "../util/hexToUint8Array.ts";
 import jsonResponse from "../util/jsonResponse.ts";
 
