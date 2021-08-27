@@ -1,6 +1,8 @@
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
 import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
+import hexToUint8Array from "../util/hexToUint8Array.ts";
+import jsonResponse from "../util/jsonResponse.ts";
 
 const PUBLIC_KEY = <string> Deno.env.get("DISCORD_PUBLIC_KEY");
 
@@ -64,17 +66,3 @@ export default async (req: ServerRequest) => {
     status: 400,
   });
 };
-
-function jsonResponse(body: unknown) {
-  return {
-    status: 200,
-    headers: new Headers({
-      "content-type": "application/json; charset=utf8",
-    }),
-    body: JSON.stringify(body),
-  };
-}
-
-function hexToUint8Array(hex: string) {
-  return new Uint8Array(hex.match(/.{1,2}/g)!.map((val) => parseInt(val, 16)));
-}
