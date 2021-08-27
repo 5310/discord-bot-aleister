@@ -12,11 +12,11 @@ import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 
 // For all requests to "/" endpoint, we want to invoke home() handler.
 serve({
-  "/": home,
+  "/endpoint": endpoint,
 });
 
 // The main logic of the Discord Slash Command is defined in this function.
-async function home(request: Request) {
+async function endpoint(request: Request) {
   // validateRequest() ensures that a request is of POST method and
   // has the following headers.
   const { error } = await validateRequest(request, {
