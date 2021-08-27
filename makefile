@@ -11,5 +11,4 @@ run: typecheck
 	deployctl run --watch ./main.ts
 
 deploy: typecheck
-	deno --allow-read --allow-write --allow-env --allow-net --allow-run ./deploy.ts
-	deployctl upgrade
+	deno run --allow-read --allow-write --allow-env --allow-net --allow-run ./deploy.ts
