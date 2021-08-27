@@ -2,18 +2,14 @@ import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
 import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
 
-const PUBLIC_KEY = Deno.env.get("DISCORD_PUBLIC_KEY");
+const PUBLIC_KEY = <string> Deno.env.get("DISCORD_PUBLIC_KEY");
 
 export default async (req: ServerRequest) => {
   const signature = req.headers.get("X-Signature-Ed25519") ?? "";
   const timestamp = req.headers.get("X-Signature-Timestamp") ?? "";
-  const body = (await readAll(req.body)).toString();
+  const body = new TextDecoder().decode(await readAll(req.body));
 
-  console.debug({
-    signature: req.headers.get("X-Signature-Ed25519"),
-    timestamp: req.headers.get("X-Signature-Timestamp"),
-    body: await readAll(req.body),
-  });
+  console.debug({ signature, timestamp, body });
 
   const isReqValid = req.method === "POST" && !!signature && !!timestamp;
   if (!isReqValid) {
@@ -24,12 +20,13 @@ export default async (req: ServerRequest) => {
       headers,
       body: JSON.stringify({ error: "invalid request format" }),
     });
+    return;
   }
 
   const isSigValid = nacl.sign.detached.verify(
     new TextEncoder().encode(timestamp + body),
-    hexToUint8Array(signature ?? ""),
-    hexToUint8Array(PUBLIC_KEY ?? ""),
+    hexToUint8Array(signature),
+    hexToUint8Array(PUBLIC_KEY),
   );
   if (!isSigValid) {
     const headers = new Headers();
@@ -39,6 +36,7 @@ export default async (req: ServerRequest) => {
       headers,
       body: JSON.stringify({ error: "invalid request signature" }),
     });
+    return;
   }
 
   const interaction: { type: number; data: { name: string; options: [] } } =
@@ -53,6 +51,7 @@ export default async (req: ServerRequest) => {
       headers,
       body: JSON.stringify({ type: 1 }),
     });
+    return;
   }
 };
 
