@@ -4,7 +4,6 @@ import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
 
 const PUBLIC_KEY = Deno.env.get("DISCORD_PUBLIC_KEY");
 
-// deno-lint-ignore require-await
 export default async (req: ServerRequest) => {
   const signature = req.headers.get("X-Signature-Ed25519") ?? "";
   const timestamp = req.headers.get("X-Signature-Timestamp") ?? "";
