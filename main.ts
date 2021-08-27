@@ -41,8 +41,9 @@ async function interactionsHandler(request: Request) {
     );
   }
 
-  const interaction = JSON.parse(body);
-  const { type = 0, data = { options: [] } } = interaction;
+  const interaction: { type: number; data: { name: string; options: [] } } =
+    JSON.parse(body);
+  const { type, data } = interaction;
   // Discord performs Ping interactions to test our application.
   // Type 1 in a request implies a Ping interaction.
   if (type === 1) {
@@ -54,12 +55,25 @@ async function interactionsHandler(request: Request) {
   // Type 2 in a request is an ApplicationCommand interaction.
   // It implies that a user has issued a command.
   if (type === 2) {
-    return json({
-      type: 4,
-      data: {
-        content: JSON.stringify(interaction),
-      },
-    });
+    // return json({
+    //   type: 4,
+    //   data: {
+    //     content: JSON.stringify(interaction),
+    //   },
+    // });
+    try {
+      import(`./command/${type}/${data.name}`)
+        .then((handler) => {
+          return handler(interaction);
+        });
+    } catch (_) {
+      return json({
+        type: 4,
+        data: {
+          content: `Handler not found!`,
+        },
+      });
+    }
     //   const { value } = data.options.find((option: { name: string }) =>
     //     option.name === "name"
     //   );
