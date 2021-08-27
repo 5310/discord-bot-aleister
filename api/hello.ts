@@ -1,4 +1,6 @@
-import { ServerRequest } from "https://deno.land/std/http/server.ts";
+#!/usr/bin/env deno run --allow-all
+
+import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
 
 // deno-lint-ignore require-await
 export default async (req: ServerRequest) => {
