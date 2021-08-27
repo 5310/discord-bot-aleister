@@ -41,7 +41,8 @@ async function interactionsHandler(request: Request) {
     );
   }
 
-  const { type = 0, data = { options: [] } } = JSON.parse(body);
+  const interaction = JSON.parse(body);
+  const { type = 0, data = { options: [] } } = interaction;
   // Discord performs Ping interactions to test our application.
   // Type 1 in a request implies a Ping interaction.
   if (type === 1) {
@@ -56,7 +57,7 @@ async function interactionsHandler(request: Request) {
     return json({
       type: 4,
       data: {
-        content: JSON.stringify(data),
+        content: JSON.stringify(interaction),
       },
     });
     //   const { value } = data.options.find((option: { name: string }) =>
