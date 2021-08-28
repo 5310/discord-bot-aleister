@@ -88,3 +88,25 @@ export type Interaction = {
   type: InteractionType;
   version: number;
 };
+
+export enum InteractionCallbackType {
+  PONG = 1,
+  CHANNEL_MESSAGE_WITH_SOURCE = 4,
+  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+  DEFERRED_UPDATE_MESSAGE,
+  UPDATE_MESSAGE,
+}
+
+export type InteractionCallbackData = {
+  // tts?: boolean;
+  content?: string;
+  // embeds?: [unknown];
+  // allowed_mentions?: unknown;
+  // flags?: number;
+  // components?: [unknown];
+};
+
+export type InteractionCallback = {
+  type: InteractionCallbackType;
+  data: InteractionCallbackData;
+};

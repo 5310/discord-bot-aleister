@@ -8,7 +8,7 @@ import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 import hexToUint8Array from "../util/hexToUint8Array.ts";
 import jsonResponse from "../util/jsonResponse.ts";
-import parseOptions from "../util/parseOptions.ts";
+import { handler as helloHandler } from "../commands/1/hello.ts";
 
 const PUBLIC_KEY = <string> Deno.env.get("DISCORD_PUBLIC_KEY");
 
@@ -58,15 +58,9 @@ export default async (req: ServerRequest) => {
 
   // Chat input
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
-    const { name, type, options } = interaction.data;
+    const { name, type } = interaction.data;
     if (type === CommandType.CHAT_INPUT && name === "hello") {
-      const parsedOptions = parseOptions(options);
-      req.respond(jsonResponse({
-        type: 4,
-        data: {
-          content: `Hello, ${parsedOptions.name.value ?? "World"}!`,
-        },
-      }));
+      req.respond(jsonResponse(helloHandler(interaction)));
       return;
     }
   }
