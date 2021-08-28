@@ -1,4 +1,4 @@
-#!/usr/bin/env deno run --include-files ../util/**/* --include-files ../commands/**/*
+#!/usr/bin/env DENO_DIR=/tmp/.deno deno run --include-files ../util/**/* --include-files ../commands/**/*
 
 import { Interaction, InteractionType } from "../util/interfaces.ts";
 import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
