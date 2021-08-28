@@ -1,3 +1,5 @@
+#!/usr/bin/env deno run --include-files ../utils/**/* --include-files ../commands/**/*
+
 import { Interaction, InteractionCallback } from "../../util/interfaces.ts";
 import parseOptions from "../../util/parseOptions.ts";
 import { handler as fail } from "./fail.ts";
