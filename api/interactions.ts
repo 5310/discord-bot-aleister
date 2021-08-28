@@ -1,3 +1,8 @@
+import {
+  CommandType,
+  Interaction,
+  InteractionType,
+} from "../util/interfaces.ts";
 import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
 import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
@@ -39,11 +44,11 @@ export default async (req: ServerRequest) => {
   }
 
   // Extract the Interaction
-  const interaction = JSON.parse(body);
-  console.debug(interaction);
+  const interaction = <Interaction> JSON.parse(body);
+  console.debug({ interaction });
 
   // Ping
-  if (interaction.type === 1) {
+  if (interaction.type === InteractionType.PING) {
     req.respond(jsonResponse({
       type: 1,
     }));
@@ -51,12 +56,13 @@ export default async (req: ServerRequest) => {
   }
 
   // Chat input
-  if (interaction.type === 2) {
-    if (interaction.data.name === "hello") {
+  if (interaction.type === InteractionType.APPLICATION_COMMAND) {
+    const { name, type, options } = interaction.data;
+    if (type === CommandType.CHAT_INPUT && name === "hello") {
       req.respond(jsonResponse({
         type: 4,
         data: {
-          content: `Hello, ${interaction.data.options[0].value}!`,
+          content: `Hello, ${options[0].value}!`,
         },
       }));
       return;
