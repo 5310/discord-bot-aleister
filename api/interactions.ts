@@ -1,3 +1,5 @@
+#!/usr/bin/env deno run --include-files ../commands/**/*.ts
+
 import { Interaction, InteractionType } from "../util/interfaces.ts";
 import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
 import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
