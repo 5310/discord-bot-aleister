@@ -1,14 +1,9 @@
-import {
-  CommandType,
-  Interaction,
-  InteractionType,
-} from "../util/interfaces.ts";
+import { Interaction, InteractionType } from "../util/interfaces.ts";
 import { ServerRequest } from "https://deno.land/std@0.106.0/http/server.ts";
 import { readAll } from "https://deno.land/std@0.106.0/io/util.ts";
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 import hexToUint8Array from "../util/hexToUint8Array.ts";
 import jsonResponse from "../util/jsonResponse.ts";
-import { handler as helloHandler } from "../commands/1/hello.ts";
 
 const PUBLIC_KEY = <string> Deno.env.get("DISCORD_PUBLIC_KEY");
 
@@ -59,9 +54,14 @@ export default async (req: ServerRequest) => {
   // Chat input
   if (interaction.type === InteractionType.APPLICATION_COMMAND) {
     const { name, type } = interaction.data;
-    if (type === CommandType.CHAT_INPUT && name === "hello") {
-      req.respond(jsonResponse(helloHandler(interaction)));
+    try {
+      const { handler } = await import(`../commands/${type}/${name}.ts`);
+      req.respond(jsonResponse(handler(interaction)));
       return;
+    } catch (error) {
+      console.error(
+        `Failed to load handler for command ${type}/${name}: ${error}`,
+      );
     }
   }
 
