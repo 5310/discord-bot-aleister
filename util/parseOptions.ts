@@ -13,9 +13,11 @@ export default function parseOptions(
   options: [CommandDataOption],
 ): ParsedCommandDataOptions {
   const parsedOptions: ParsedCommandDataOptions = {};
-  options.forEach((option) => ({
-    ...options,
-    options: option.options ? parseOptions(option.options) : undefined,
-  }));
+  options.forEach((option) => {
+    parsedOptions[option.name] = {
+      ...option,
+      options: option.options ? parseOptions(option.options) : undefined,
+    };
+  });
   return parsedOptions;
 }
